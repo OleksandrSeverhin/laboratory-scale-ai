@@ -11,6 +11,7 @@ import argparse
 import json
 from collections import Counter
 from os import path, makedirs, getenv
+from huggingface_hub import login as hf_login
 
 '''
 def evaluate_openai_model_qa(bot: DialogueBot,
@@ -109,11 +110,7 @@ def generate_from_prompt(model, tokenizer, input_data, start_prompt='', end_prom
     decoded_output = tokenizer.decode(outputs[0], skip_special_tokens=True)
     return decoded_output
 
-# Load the gpqa_diamond dataset from Hugging Face
-ds = load_dataset("Idavidrein/gpqa", "gpqa_diamond")
 
-# Convert dataset to a Pandas DataFrame
-df = pd.DataFrame(ds['train'])
 
 # Ensure the Hugging Face model is loaded correctly
 def evaluate_hf_model_qa(model: AutoModelForCausalLM, 
@@ -161,13 +158,23 @@ def evaluate_hf_model_qa(model: AutoModelForCausalLM,
 
 
 if __name__ == '__main__':
+    hf_login()
+    
+    # Load the gpqa_diamond dataset from Hugging Face
+    ds = load_dataset("Idavidrein/gpqa", "gpqa_diamond")
+
+    # Convert dataset to a Pandas DataFrame
+    df = pd.DataFrame(ds['train'])
+
     # Parse the command line arguments
     parser = argparse.ArgumentParser(description='Evaluate a model on a QA task.')
 
     # Model arguments
-    parser.add_argument('--hf_model_id', type=str, help='The Hugging Face model to evaluate', default='llama-2-7b-chat-hf')
+    parser.add_argument('--hf_model_id', type=str, help='The Hugging Face model to evaluate', default='meta-llama/Llama-3.1-8B-Instruct')
 
     # Dataset arguments
+
+    ### EDIT THIS (question-column and answer columns 100%)
     parser.add_argument('--question_column', type=str, help='The name of the question column in the dataset', default='input')
     parser.add_argument('--answer_column', type=str, help='The name of the answer column in the dataset', default='output')
     parser.add_argument('--max_samples', type=int, help='The maximum number of samples to evaluate', default=200)
