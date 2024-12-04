@@ -71,7 +71,7 @@ if __name__ == '__main__':
     hf_login()
     
     # Load the gpqa_diamond dataset from Hugging Face
-    df = pd.read_excel('laboratory-scale-ai\data\gpqa_diamond_15_custom.xlsx', engine="openpyxl")
+    df = pd.read_excel('laboratory-scale-ai\data\gpqa_diamond_15_o1_preview.xlsx', engine="openpyxl")
 
     parser = argparse.ArgumentParser(description='Fine-tune a summarization model.')
 
