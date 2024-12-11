@@ -1,6 +1,9 @@
 import torch
 import bitsandbytes as bnb
 
+import pandas as pd
+from sklearn.model_selection import train_test_split
+
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling, AutoModel
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, PeftModel, PeftConfig
 from datasets import load_dataset
@@ -228,6 +231,51 @@ def get_dataset_slices(dataset: str,
     # Return the dictionary of dataset splits
     return {'train': train_data, 'validation': validation_data, 'test': test_data}
     
+def get_dataset_slices_from_xlsx(
+    file_path: str,
+    train_ratio: float = 0.8,
+    validation_ratio: float = 0.1,
+    test_ratio: float = 0.1
+) -> dict:
+    """
+    Splits a dataset from an Excel file into training, validation, and test sets.
+
+    Args:
+        file_path (str): Path to the Excel file containing the dataset.
+        train_ratio (float): Proportion of data to include in the training set.
+        validation_ratio (float): Proportion of data to include in the validation set.
+        test_ratio (float): Proportion of data to include in the test set.
+
+    Returns:
+        dict: A dictionary containing the training, validation, and test datasets.
+    """
+    # Check if ratios sum to 1
+    if not (train_ratio + validation_ratio + test_ratio == 1.0):
+        raise ValueError("Train, validation, and test ratios must sum to 1.")
+
+    # Load data from Excel file
+    data = pd.read_excel(file_path)
+
+    # Split data into training and temp sets
+    train_data, temp_data = train_test_split(
+        data, test_size=(1 - train_ratio), random_state=42
+    )
+
+    # Calculate validation and test proportions relative to temp set
+    validation_ratio_relative = validation_ratio / (validation_ratio + test_ratio)
+
+    # Split temp set into validation and test sets
+    validation_data, test_data = train_test_split(
+        temp_data, test_size=(1 - validation_ratio_relative), random_state=42
+    )
+
+    # Return the dictionary of dataset splits
+    return {
+        'train': train_data,
+        'validation': validation_data,
+        'test': test_data
+    }
+
 def get_default_trainer(model: AutoModel,
                 tokenizer: AutoTokenizer,
                 train_dataset: Mapping,
