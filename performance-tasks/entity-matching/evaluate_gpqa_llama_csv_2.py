@@ -66,6 +66,9 @@ if __name__ == '__main__':
     # Load questions and answers from Excel
     df = pd.read_excel(data_path)
 
+    # Ensure 'Correct Answer' column is of string type
+    df['Correct Answer'] = df['Correct Answer'].astype(str)
+
     # Convert DataFrame to Dataset
     data = Dataset.from_pandas(df)
 
