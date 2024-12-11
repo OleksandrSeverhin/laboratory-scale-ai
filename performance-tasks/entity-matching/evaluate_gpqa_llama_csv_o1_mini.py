@@ -12,7 +12,8 @@ import argparse
 import wandb
 import pandas as pd
 
-from datasets import load_dataset
+from datasets import load_dataset, Dataset
+
 from huggingface_hub import login as hf_login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling, AutoModel
 from os import path, mkdir, getenv, makedirs
@@ -274,6 +275,10 @@ if __name__ == '__main__':
     train_data, temp_data = train_test_split(data['train'], test_size=0.2, random_state=42)
     # Further split temp into validation and test sets
     validation_data, test_data = train_test_split(temp_data, test_size=0.5, random_state=42)
+
+    train_data = Dataset.from_pandas(train_data)
+    validation_data = Dataset.from_pandas(validation_data)
+    test_data = Dataset.from_pandas(test_data)
 
     # Set the format of the data
     train_data.set_format(type='torch', device=args.device)
