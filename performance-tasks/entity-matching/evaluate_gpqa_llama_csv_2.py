@@ -45,7 +45,9 @@ def evaluate_answers(model, tokenizer, data, input_col, target_col):
 
 if __name__ == '__main__':
     hf_login()
-    data_path = '/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15.xlsx'
+    data_paths = ['/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15.xlsx',
+                  '/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15_o1_mini.xlsx',
+                  '/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15_o1_preview.xlsx']
 
     parser = argparse.ArgumentParser(description='Evaluate LLaMA-3.2b with questions from an XLSX file.')
     parser.add_argument('--model_id', type=str, default='meta-llama/Llama-3.2-1B', help='The model ID to fine-tune.')
@@ -63,17 +65,18 @@ if __name__ == '__main__':
     # Load model and tokenizer
     model, tokenizer = get_model_and_tokenizer(args.model_id, device=device)
 
-    # Load questions and answers from Excel
-    df = pd.read_excel(data_path)
+    for data_path in data_paths:
+        # Load questions and answers from Excel
+        df = pd.read_excel(data_path)
 
-    # Ensure 'Correct Answer' column is of string type
-    df['Correct Answer'] = df['Correct Answer'].astype(str)
+        # Ensure 'Correct Answer' column is of string type
+        df['Correct Answer'] = df['Correct Answer'].astype(str)
 
-    # Convert DataFrame to Dataset
-    data = Dataset.from_pandas(df)
+        # Convert DataFrame to Dataset
+        data = Dataset.from_pandas(df)
 
-    # Evaluate model
-    accuracy = evaluate_answers(model, tokenizer, data, input_col='Question', target_col='Correct Answer')
+        # Evaluate model
+        accuracy = evaluate_answers(model, tokenizer, data, input_col='Question', target_col='Correct Answer')
 
-    # Print summary
-    print(f'Accuracy: {accuracy:.2f}%')
+        # Print summary
+        print(f'Accuracy: {accuracy:.2f}%')
