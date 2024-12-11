@@ -276,6 +276,10 @@ if __name__ == '__main__':
     # Further split temp into validation and test sets
     validation_data, test_data = train_test_split(temp_data, test_size=0.5, random_state=42)
 
+    test_data['Correct Answer'] = test_data['Correct Answer'].astype(str)
+    validation_data['Correct Answer'] = validation_data['Correct Answer'].astype(str)
+    train_data['Correct Answer'] = train_data['Correct Answer'].astype(str)
+
     train_data = Dataset.from_pandas(train_data)
     validation_data = Dataset.from_pandas(validation_data)
     test_data = Dataset.from_pandas(test_data)
