@@ -73,7 +73,7 @@ if __name__ == '__main__':
     data = Dataset.from_pandas(df)
 
     # Evaluate model
-    accuracy = evaluate_answers(model, tokenizer, data, input_col='question', target_col='answer')
+    accuracy = evaluate_answers(model, tokenizer, data, input_col='Question', target_col='Correct Answer')
 
     # Print summary
     print(f'Accuracy: {accuracy:.2f}%')
