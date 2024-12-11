@@ -97,7 +97,7 @@ if __name__ == '__main__':
     parser.add_argument('--exclude_names', type=str, default='lm_head', help='The names of the modules to exclude from tuning.')
 
     # Dataset arguments
-    parser.add_argument('--dataset', type=str, default=df, help='The dataset to use for fine-tuning.')
+    parser.add_argument('--dataset', type=str, default=ds, help='The dataset to use for fine-tuning.')
     parser.add_argument('--version', type=str, default='3.0.0', nargs='?', help='The version of the dataset to use for fine-tuning.')
     parser.add_argument('--input_col', type=str, default='article', help='The name of the input column in the dataset.')
     parser.add_argument('--target_col', type=str, default='highlights', help='The name of the target column in the dataset.')
