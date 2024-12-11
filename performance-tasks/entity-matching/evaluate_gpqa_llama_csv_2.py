@@ -48,7 +48,7 @@ if __name__ == '__main__':
     data_path = '/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15.xlsx'
 
     parser = argparse.ArgumentParser(description='Evaluate LLaMA-3.2b with questions from an XLSX file.')
-    parser.add_argument('--model_id', type=str, default='meta-llama/Llama-3.2b', help='The model ID to fine-tune.')
+    parser.add_argument('--model_id', type=str, default='meta-llama/Llama-3.2-1B', help='The model ID to fine-tune.')
     parser.add_argument('--hf_token_var', type=str, default='HF_TOKEN', help='Name of the HuggingFace API token variable name.')
     parser.add_argument('--device', type=str, default='cuda:0', help='The device to mount the model on.')
 
