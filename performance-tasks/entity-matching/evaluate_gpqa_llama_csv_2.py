@@ -1,23 +1,13 @@
-import time
-import numpy as np
-import torch
-import bitsandbytes as bnb
-import logging
-import sys
-import transformers
-import datasets
 import argparse
-import wandb
 import pandas as pd
 
 from datasets import Dataset
 from huggingface_hub import login as hf_login
-from transformers import AutoTokenizer, AutoModelForCausalLM, TrainingArguments
-from os import path, mkdir, getenv, makedirs
+from transformers import AutoTokenizer
+from os import getenv
 from typing import Mapping
-from sklearn.model_selection import train_test_split
 
-from finetune_functions import get_model_and_tokenizer, get_lora_model, get_default_trainer, evaluate_hf_model_em
+from finetune_functions import get_model_and_tokenizer
 
 
 def format_data_as_instructions(data: Mapping, tokenizer: AutoTokenizer, nshots=0) -> list[str]:
