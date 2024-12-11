@@ -254,7 +254,7 @@ def get_dataset_slices_from_xlsx(
         raise ValueError("Train, validation, and test ratios must sum to 1.")
 
     # Load data from Excel file
-    data = pd.read_excel(file_path)
+    data = pd.read_excel(file_path, engine="openpyxl")
 
     # Split data into training and temp sets
     train_data, temp_data = train_test_split(
