@@ -19,7 +19,7 @@ from os import path, mkdir, getenv, makedirs
 from typing import Mapping
 from sklearn.model_selection import train_test_split
 
-from finetune_functions import get_model_and_tokenizer, get_lora_model, get_default_trainer, get_dataset_slices, get_dataset_slices_from_xlsx
+from finetune_functions import get_model_and_tokenizer, get_lora_model, get_default_trainer, get_dataset_slices
 from evaluate_em import evaluate_hf_model_em, MODEL_SUFFIXES, system_message, transaction, examples
 
 
@@ -267,7 +267,7 @@ if __name__ == '__main__':
     # Download and prepare data
     print('Downloading and preparing data...')
 
-    data = get_dataset_slices_from_xlsx(args.dataset)
+    data = get_dataset_slices(args.dataset)
 
     # Get dataset splits
     train_data = data['train']
