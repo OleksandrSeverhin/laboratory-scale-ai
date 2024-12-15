@@ -12,7 +12,7 @@ import argparse
 import wandb
 import pandas as pd
 
-from datasets import load_dataset, DatasetDict
+from datasets import load_dataset, Dataset, DatasetDict
 from huggingface_hub import login as hf_login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling, AutoModel
 from os import path, mkdir, getenv, makedirs
@@ -74,7 +74,14 @@ if __name__ == '__main__':
 
     # Convert dataset to a Pandas DataFrame
     df = pd.DataFrame(ds['train'])
-    ds_dict = Dataset.from_pandas(df)
+    
+    # Convert to a Dataset type
+    full_dataset = Dataset.from_pandas(df)
+
+    # Convert to a DatasetDict type
+    ds_dict = DatasetDict({
+    "train": full_dataset
+    })
 
     parser = argparse.ArgumentParser(description='Fine-tune a summarization model.')
 
