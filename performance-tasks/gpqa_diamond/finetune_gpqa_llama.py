@@ -12,12 +12,11 @@ import argparse
 import wandb
 import pandas as pd
 
-from datasets import load_dataset
+from datasets import load_dataset, DatasetDict
 from huggingface_hub import login as hf_login
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling, AutoModel
 from os import path, mkdir, getenv, makedirs
 from typing import Mapping
-from sklearn.model_selection import train_test_split
 
 from finetune_functions import get_model_and_tokenizer, get_lora_model, get_default_trainer, get_dataset_slices, get_dataset_dict_slices
 from evaluate_em import evaluate_hf_model_em, MODEL_SUFFIXES, system_message, transaction, examples
@@ -75,7 +74,7 @@ if __name__ == '__main__':
 
     # Convert dataset to a Pandas DataFrame
     df = pd.DataFrame(ds['train'])
-
+    ds_dict = Dataset.from_pandas(df)
 
     parser = argparse.ArgumentParser(description='Fine-tune a summarization model.')
 
@@ -99,6 +98,7 @@ if __name__ == '__main__':
     # Dataset arguments
     parser.add_argument('--dataset', type=str, default=ds, help='The dataset to use for fine-tuning.')
     parser.add_argument('--dataset_df', type=str, default=df, help='The dataset to use for fine-tuning in DataFrame format.')
+    parser.add_argument('--dataset_dict', type=str, default=ds_dict, help='The dataset to use for fine-tuning in DatasetDict format.')
     parser.add_argument('--version', type=str, default='3.0.0', nargs='?', help='The version of the dataset to use for fine-tuning.')
     parser.add_argument('--input_col', type=str, default='article', help='The name of the input column in the dataset.')
     parser.add_argument('--target_col', type=str, default='highlights', help='The name of the target column in the dataset.')
