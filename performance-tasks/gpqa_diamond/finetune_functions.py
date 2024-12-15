@@ -6,7 +6,7 @@ from sklearn.model_selection import train_test_split
 
 from transformers import AutoTokenizer, AutoModelForCausalLM, BitsAndBytesConfig, TrainingArguments, DataCollatorForLanguageModeling, AutoModel
 from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training, PeftModel, PeftConfig
-from datasets import load_dataset
+from datasets import load_dataset, DatasetDict
 from trl import SFTTrainer
 from tqdm import tqdm
 from typing import Mapping, Iterable
@@ -275,6 +275,36 @@ def get_dataset_slices_from_xlsx(
         'validation': validation_data,
         'test': test_data
     }
+
+def get_dataset_dict_slices(dataset_path_or_name):
+    """
+    Load and prepare dataset slices for training and testing.
+
+    Parameters:
+    ----------
+    dataset_path_or_name: str or DatasetDict
+        Path to the dataset file or dataset identifier.
+
+    Returns:
+    --------
+    train_data: Dataset
+        The training dataset slice.
+    test_data: Dataset
+        The testing dataset slice.
+    """
+    if isinstance(dataset_path_or_name, DatasetDict):
+        # If dataset is already loaded as a DatasetDict
+        if "train" not in dataset_path_or_name or "test" not in dataset_path_or_name:
+            raise ValueError("DatasetDict must contain 'train' and 'test' splits.")
+        train_data = dataset_path_or_name["train"]
+        test_data = dataset_path_or_name["test"]
+    else:
+        # Assume it is a path or dataset identifier
+        dataset = load_dataset(dataset_path_or_name)
+        train_data = dataset["train"]
+        test_data = dataset["test"]
+
+    return train_data, test_data
 
 def get_default_trainer(model: AutoModel,
                 tokenizer: AutoTokenizer,
