@@ -275,7 +275,7 @@ if __name__ == '__main__':
     # Download and prepare data
     print('Downloading and preparing data...')
 
-    train_data, validation_data, test_data = get_dataset_dict_slices(args.dataset_df, train_frac=0.7, val_frac=0.2, seed=42)
+    train_data, validation_data, test_data = get_dataset_dict_slices(args.dataset_dict, train_frac=0.7, val_frac=0.2, seed=42)
 
     # Set the format of the data
     train_data.set_format(type='torch', device=args.device)
