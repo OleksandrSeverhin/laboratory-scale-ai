@@ -74,7 +74,7 @@ if __name__ == '__main__':
     ds = load_dataset("Idavidrein/gpqa", "gpqa_diamond")
 
     # Convert dataset to a Pandas DataFrame
-    #df = pd.DataFrame(ds['train'])
+    df = pd.DataFrame(ds['train'])
 
 
     parser = argparse.ArgumentParser(description='Fine-tune a summarization model.')
@@ -98,6 +98,7 @@ if __name__ == '__main__':
 
     # Dataset arguments
     parser.add_argument('--dataset', type=str, default=ds, help='The dataset to use for fine-tuning.')
+    parser.add_argument('--dataset_df', type=str, default=df, help='The dataset to use for fine-tuning in DataFrame format.')
     parser.add_argument('--version', type=str, default='3.0.0', nargs='?', help='The version of the dataset to use for fine-tuning.')
     parser.add_argument('--input_col', type=str, default='article', help='The name of the input column in the dataset.')
     parser.add_argument('--target_col', type=str, default='highlights', help='The name of the target column in the dataset.')
@@ -267,15 +268,7 @@ if __name__ == '__main__':
     # Download and prepare data
     print('Downloading and preparing data...')
 
-    data = get_dataset_dict_slices(args.dataset)
-
-    # Get dataset splits
-    train_data = data['train']
-
-    # Split into training and temp (for validation and testing)
-    train_data, temp_data = train_test_split(data['train'], test_size=0.2, random_state=42)
-    # Further split temp into validation and test sets
-    validation_data, test_data = train_test_split(temp_data, test_size=0.5, random_state=42)
+    train_data, validation_data, test_data = get_dataset_dict_slices(args.dataset_df, train_frac=0.7, val_frac=0.2, seed=42)
 
     # Set the format of the data
     train_data.set_format(type='torch', device=args.device)

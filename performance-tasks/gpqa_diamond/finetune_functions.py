@@ -276,35 +276,51 @@ def get_dataset_slices_from_xlsx(
         'test': test_data
     }
 
-def get_dataset_dict_slices(dataset_path_or_name):
+def get_dataset_dict_slices(dataset_path_or_name, train_frac=0.8, val_frac=0.1, seed=42):
     """
-    Load and prepare dataset slices for training and testing.
+    Load and prepare dataset slices for training, validation, and testing.
 
     Parameters:
     ----------
     dataset_path_or_name: str or DatasetDict
         Path to the dataset file or dataset identifier.
+    train_frac: float, optional
+        Fraction of the dataset to use for training. Default is 0.8.
+    val_frac: float, optional
+        Fraction of the dataset to use for validation. The remainder is used for testing. Default is 0.1.
+    seed: int, optional
+        Random seed for reproducibility. Default is 42.
 
     Returns:
     --------
     train_data: Dataset
         The training dataset slice.
+    val_data: Dataset
+        The validation dataset slice.
     test_data: Dataset
         The testing dataset slice.
     """
     if isinstance(dataset_path_or_name, DatasetDict):
-        # If dataset is already loaded as a DatasetDict
-        if "train" not in dataset_path_or_name or "test" not in dataset_path_or_name:
-            raise ValueError("DatasetDict must contain 'train' and 'test' splits.")
-        train_data = dataset_path_or_name["train"]
-        test_data = dataset_path_or_name["test"]
+        # If dataset is already loaded as a DatasetDict, use the "train" split
+        full_data = dataset_path_or_name["train"]
     else:
         # Assume it is a path or dataset identifier
         dataset = load_dataset(dataset_path_or_name)
-        train_data = dataset["train"]
-        test_data = dataset["test"]
+        full_data = dataset["train"]
 
-    return train_data, test_data
+    # Calculate the number of examples for each split
+    total_size = len(full_data)
+    train_size = int(total_size * train_frac)
+    val_size = int(total_size * val_frac)
+    test_size = total_size - train_size - val_size
+
+    # Shuffle and split the dataset
+    full_data = full_data.shuffle(seed=seed)
+    train_data = full_data.select(range(train_size))
+    val_data = full_data.select(range(train_size, train_size + val_size))
+    test_data = full_data.select(range(train_size + val_size, total_size))
+
+    return train_data, val_data, test_data
 
 def get_default_trainer(model: AutoModel,
                 tokenizer: AutoTokenizer,
