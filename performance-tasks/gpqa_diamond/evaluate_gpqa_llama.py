@@ -181,8 +181,7 @@ if __name__ == '__main__':
     model = AutoModelForCausalLM.from_pretrained(
         "meta-llama/Llama-3.1-8B-Instruct",
         device_map="auto",  # Automatically splits model across devices
-        offload_folder="./offload",  # Offload layers to disk if necessary
-        offload_state_dict=True
+        offload_folder="./offload"  # Offload layers to disk if necessary
     )
     model.eval()
 
