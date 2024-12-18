@@ -97,7 +97,7 @@ def evaluate_hf_model_qa(model: AutoModelForCausalLM,
     Evaluate a Hugging Face model on a QA task.
     """
     exact_match, f1 = [], []
-    model.to(device)  # Ensure the model is on the correct device
+    #model.to(device)  # Ensure the model is on the correct device
 
     for idx in tqdm(range(min(max_samples, len(data))), desc='Evaluating QA model'):
         question = data[idx][question_column]
@@ -181,7 +181,8 @@ if __name__ == '__main__':
     model = AutoModelForCausalLM.from_pretrained(
         "meta-llama/Llama-3.1-8B-Instruct",
         device_map="auto",  # Automatically splits model across devices
-        offload_folder="./offload"  # Offload layers to disk if necessary
+        offload_folder="./offload",  # Offload layers to disk if necessary
+        offload_state_dict=True
     )
     model.eval()
 
