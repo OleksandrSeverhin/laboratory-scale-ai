@@ -177,8 +177,13 @@ if __name__ == '__main__':
 
     # Load the Hugging Face model and tokenizer
     print('Loading Hugging Face model: ', args.hf_model_id)
-    tokenizer = AutoTokenizer.from_pretrained(args.hf_model_id)
-    model = AutoModelForCausalLM.from_pretrained(args.hf_model_id).to(args.device)
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
+    model = AutoModelForCausalLM.from_pretrained(
+        "meta-llama/Llama-3.1-8B-Instruct",
+        device_map="auto",  # Automatically splits model across devices
+        offload_folder="./offload",  # Offload layers to disk if necessary
+        offload_state_dict=True
+    )
     model.eval()
 
     # Evaluate the Hugging Face model

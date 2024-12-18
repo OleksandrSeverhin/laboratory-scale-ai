@@ -1,6 +1,6 @@
 import argparse
 import pandas as pd
-
+from transformers import AutoModelForCausalLM, AutoTokenizer
 from datasets import Dataset
 from huggingface_hub import login as hf_login
 from transformers import AutoTokenizer
@@ -64,7 +64,13 @@ if __name__ == '__main__':
         hf_login(token=getenv(args.hf_token_var))
 
     # Load model and tokenizer
-    model, tokenizer = get_model_and_tokenizer(args.model_id, device=device)
+    tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-3.1-8B-Instruct")
+    model = AutoModelForCausalLM.from_pretrained(
+    "meta-llama/Llama-3.1-8B-Instruct",
+    device_map="auto",  # Automatically splits model across devices
+    offload_folder="./offload",  # Offload layers to disk if necessary
+    offload_state_dict=True
+    )
 
     for data_path in data_paths:
         # Load questions and answers from Excel
