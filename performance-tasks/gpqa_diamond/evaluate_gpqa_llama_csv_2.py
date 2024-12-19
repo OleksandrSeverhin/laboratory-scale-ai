@@ -4,27 +4,8 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 from datasets import Dataset
 from huggingface_hub import login as hf_login
 from transformers import AutoTokenizer
-from os import getenv
-from typing import Mapping
 
-from finetune_functions import get_model_and_tokenizer
-
-
-def format_data_as_instructions(data: Mapping, tokenizer: AutoTokenizer, nshots=0) -> list[str]:
-    """Formats text data as instructions for the model."""
-    output_texts = []
-
-    for idx in range(len(data['prompt'])):
-        question = data['prompt'][idx]
-        chat = [{"role": "user", "content": question}]
-        chat.append({"role": "assistant", "content": data['overall_label'][idx]})
-        output_text = tokenizer.apply_chat_template(chat, tokenize=False, add_generation_prompt=False)
-        output_texts.append(output_text)
-
-    return output_texts
-
-
-def evaluate_answers(model, tokenizer, data, input_col, target_col, batch_size=8):
+def evaluate_answers(model, tokenizer, data, input_col, target_col, batch_size=4):
     correct = 0
     total = len(data)
     
