@@ -5,7 +5,7 @@ from datasets import Dataset
 from huggingface_hub import login as hf_login
 from transformers import AutoTokenizer
 
-def evaluate_answers(model, tokenizer, data, input_col, target_col, batch_size=4):
+def evaluate_answers(model, tokenizer, data, input_col, target_col, batch_size=2):
     correct = 0
     total = len(data)
     
