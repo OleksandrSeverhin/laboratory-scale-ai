@@ -67,7 +67,7 @@ if __name__ == '__main__':
         device_map="auto",
         offload_folder="./offload",
         offload_state_dict=True
-    ).to(device)
+    )
 
     for data_path in data_paths:
         df = pd.read_excel(data_path)
