@@ -69,6 +69,9 @@ if __name__ == '__main__':
         offload_state_dict=True
     )
 
+    if tokenizer.pad_token is None:
+        tokenizer.pad_token = tokenizer.eos_token
+
     for data_path in data_paths:
         df = pd.read_excel(data_path)
         df['Correct Answer'] = df['Correct Answer'].astype(str)
