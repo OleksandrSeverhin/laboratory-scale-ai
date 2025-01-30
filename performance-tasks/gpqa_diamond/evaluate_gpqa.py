@@ -151,7 +151,7 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Evaluate a model on a QA task.')
 
     # Model arguments
-    parser.add_argument('--hf_model_id', type=str, help='The Hugging Face model to evaluate', default='meta-llama/Llama-3.2-1B')
+    parser.add_argument('--hf_model_id', type=str, help='The Hugging Face model to evaluate', default='meta-llama/Llama-3.1-8B-Instruct')
     parser.add_argument('--oai_model_id', type=str, help='The OpenAI model ID to use in the results file', default='gpt-3.5-turbo')
 
     # Dataset arguments

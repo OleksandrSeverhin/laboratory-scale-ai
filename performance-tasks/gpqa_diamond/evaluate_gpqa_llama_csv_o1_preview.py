@@ -72,13 +72,10 @@ if __name__ == '__main__':
     
     data_path = '/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15_o1_preview.xlsx'
 
-    # Load the gpqa_diamond dataset from Hugging Face
-    # df = pd.read_excel('/home/ubuntu/laboratory-scale-ai/data/gpqa_diamond_15_o1_preview.xlsx', engine="openpyxl")
-
     parser = argparse.ArgumentParser(description='Fine-tune a summarization model.')
 
     # Model ID
-    parser.add_argument('--model_id', type=str, default='meta-llama/Llama-3.2-1B', help='The model ID to fine-tune.')
+    parser.add_argument('--model_id', type=str, default='meta-llama/Llama-3.1-8B-Instruct', help='The model ID to fine-tune.')
     parser.add_argument('--hf_token_var', type=str, default='HF_TOKEN', help='Name of the HuggingFace API token variable name.')
     parser.add_argument('--resume_from_checkpoint', type=str, default='False', help='Whether to resume from a checkpoint.')
 
